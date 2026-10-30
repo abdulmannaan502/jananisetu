@@ -68,6 +68,11 @@ data/*.sqlite3-shm
 data/private_storage/
 data/scans/
 
+# Backup archives
+*.zip
+*.tar.gz
+*.tgz
+
 # IDE & OS files
 .vscode/
 .idea/
