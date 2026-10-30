@@ -1,0 +1,75 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Node & Frontend dependencies & builds
+node_modules/
+frontend/node_modules/
+frontend/dist/
+app/static/dist/
+.vite/
+frontend/.vite/
+
+# Playwright & Testing caches
+.pytest_cache/
+test-results/
+frontend/test-results/
+playwright-report/
+frontend/playwright-report/
+blob-report/
+playwright/.cache/
+
+# Environment files & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+
+# Local SQLite databases & runtime test files
+*.sqlite
+*.sqlite3
+*.db
+data/*.sqlite3
+data/*.sqlite3-journal
+data/*.sqlite3-wal
+data/*.sqlite3-shm
+data/private_storage/
+data/scans/
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

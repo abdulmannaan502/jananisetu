@@ -1,0 +1,117 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: jananisetu-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-janani}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-janani_secure_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-jananisetu}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-janani} -d ${POSTGRES_DB:-jananisetu}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: jananisetu-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jananisetu-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      JANANI_DB_URL: postgresql+psycopg://${POSTGRES_USER:-janani}:${POSTGRES_PASSWORD:-janani_secure_pass}@postgres:5432/${POSTGRES_DB:-jananisetu}
+      JANANI_REDIS_URL: redis://redis:6379/0
+      JANANI_JWT_SECRET: ${JANANI_JWT_SECRET:-jananisetu-production-grade-secret-key-2026}
+      JANANI_WEBHOOK_SECRET: ${JANANI_WEBHOOK_SECRET:-jananisetu-webhook-hmac-secret-2026}
+      JANANI_ENV: production
+      JANANI_DATA_DIR: /app/data
+      JANANI_SEED_DEMO_DATA: "true"
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8000/api/health\")'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    volumes:
+      - appdata:/app/data
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jananisetu-celery-worker
+    restart: unless-stopped
+    command: ["celery", "-A", "app.celery_app:celery_app", "worker", "--loglevel=info"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    environment:
+      JANANI_DB_URL: postgresql+psycopg://${POSTGRES_USER:-janani}:${POSTGRES_PASSWORD:-janani_secure_pass}@postgres:5432/${POSTGRES_DB:-jananisetu}
+      JANANI_REDIS_URL: redis://redis:6379/0
+      JANANI_JWT_SECRET: ${JANANI_JWT_SECRET:-jananisetu-production-grade-secret-key-2026}
+      JANANI_WEBHOOK_SECRET: ${JANANI_WEBHOOK_SECRET:-jananisetu-webhook-hmac-secret-2026}
+      JANANI_ENV: production
+      JANANI_DATA_DIR: /app/data
+    volumes:
+      - appdata:/app/data
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jananisetu-celery-beat
+    restart: unless-stopped
+    command: ["celery", "-A", "app.celery_app:celery_app", "beat", "--loglevel=info"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    environment:
+      JANANI_DB_URL: postgresql+psycopg://${POSTGRES_USER:-janani}:${POSTGRES_PASSWORD:-janani_secure_pass}@postgres:5432/${POSTGRES_DB:-jananisetu}
+      JANANI_REDIS_URL: redis://redis:6379/0
+      JANANI_JWT_SECRET: ${JANANI_JWT_SECRET:-jananisetu-production-grade-secret-key-2026}
+      JANANI_WEBHOOK_SECRET: ${JANANI_WEBHOOK_SECRET:-jananisetu-webhook-hmac-secret-2026}
+      JANANI_ENV: production
+      JANANI_DATA_DIR: /app/data
+    volumes:
+      - appdata:/app/data
+
+volumes:
+  pgdata:
+  redisdata:
+  appdata:
