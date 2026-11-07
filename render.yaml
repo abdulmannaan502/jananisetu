@@ -8,7 +8,7 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     healthCheckPath: /api/health
-    dockerCommand: sh -c "python -c 'import app.main' && python -m scripts.seed_demo_data && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+    dockerCommand: sh scripts/start_demo.sh
     envVars:
       - key: JANANI_ENV
         value: development
