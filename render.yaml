@@ -14,6 +14,10 @@ services:
         value: development
       - key: JANANI_SEED_DEMO_DATA
         value: "true"
+      - key: JANANI_OCR_TIMEOUT
+        value: "180"
+      - key: OMP_THREAD_LIMIT
+        value: "1"
       - key: JANANI_ALLOW_LEGACY_HEADER
         value: "false"
       - key: JANANI_JWT_SECRET

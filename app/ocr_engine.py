@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import date, datetime
 import hashlib
+import os
 from io import BytesIO
 import json
 from pathlib import Path
@@ -366,7 +367,7 @@ def run_anc_ocr_pipeline(
             data = pytesseract.image_to_data(
                 img_obj,
                 output_type=pytesseract.Output.DICT,
-                timeout=15,
+                timeout=int(os.getenv("JANANI_OCR_TIMEOUT", "15")),
             )
             n_boxes = len(data.get("text", []))
             for i in range(n_boxes):
