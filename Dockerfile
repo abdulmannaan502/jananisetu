@@ -22,6 +22,7 @@ COPY alembic.ini .
 COPY alembic ./alembic
 COPY app ./app
 COPY scripts ./scripts
+COPY data/fixtures ./data/fixtures
 COPY --from=frontend-builder /app/static/dist ./app/static/dist
 
 ENV JANANI_DATA_DIR=/app/data

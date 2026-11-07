@@ -142,6 +142,12 @@ def generate_fixture_image_bytes(fixture_id: str) -> bytes:
     if fixture_id not in FIXTURE_SPECS:
         raise ValueError(f"Unknown fixture_id: {fixture_id}")
 
+    # Prefer the committed reference PNG so every host (Windows, Linux, Docker) evaluates the same
+    # pixels; fall back to rendering only if the file is missing.
+    bundled = Path(__file__).resolve().parent.parent / "data" / "fixtures" / f"{fixture_id}.png"
+    if bundled.is_file():
+        return bundled.read_bytes()
+
     spec = FIXTURE_SPECS[fixture_id]
     lines: list[str] = spec["lines"]
     header_font, body_font, hand_font = _load_fonts()
