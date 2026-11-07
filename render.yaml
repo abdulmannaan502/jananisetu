@@ -1,0 +1,20 @@
+# Render blueprint for the Health-a-thon 2026 evaluator demo.
+# SYNTHETIC DATA ONLY. Free plan: SQLite on an ephemeral disk, re-seeded on every start.
+# The app runs with JANANI_ENV=development because production mode disables the demo accounts.
+services:
+  - type: web
+    name: jananisetu-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    dockerCommand: sh -c "python -c 'import app.main' && python -m scripts.seed_demo_data && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+    envVars:
+      - key: JANANI_ENV
+        value: development
+      - key: JANANI_SEED_DEMO_DATA
+        value: "true"
+      - key: JANANI_ALLOW_LEGACY_HEADER
+        value: "false"
+      - key: JANANI_JWT_SECRET
+        generateValue: true
