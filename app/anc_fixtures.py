@@ -125,9 +125,15 @@ def _load_fonts() -> tuple[Any, Any, Any]:
             body_font = ImageFont.truetype("arial.ttf", 22)
             hand_font = ImageFont.truetype("arial.ttf", 22)
         except Exception:
-            header_font = ImageFont.load_default()
-            body_font = ImageFont.load_default()
-            hand_font = ImageFont.load_default()
+            try:
+                # Linux fallback: Liberation Sans is metric-compatible with Arial (package fonts-liberation)
+                header_font = ImageFont.truetype("LiberationSans-Bold.ttf", 24)
+                body_font = ImageFont.truetype("LiberationSans-Regular.ttf", 22)
+                hand_font = ImageFont.truetype("LiberationSans-Italic.ttf", 23)
+            except Exception:
+                header_font = ImageFont.load_default()
+                body_font = ImageFont.load_default()
+                hand_font = ImageFont.load_default()
     return header_font, body_font, hand_font
 
 
