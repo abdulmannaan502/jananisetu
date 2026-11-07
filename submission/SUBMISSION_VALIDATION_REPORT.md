@@ -5,7 +5,7 @@
 ## 1. Deliverables
 | Deliverable | File | Status |
 |---|---|---|
-| A. Functional MVP | `MVP_ACCESS_GUIDE.md`, `MVP_VERIFICATION_REPORT.md` | **Local demo only; no public URL exists or was invented.** Deployment checklist provided. |
+| A. Functional MVP | https://jananisetu-demo.onrender.com (Render free plan, synthetic data); `MVP_ACCESS_GUIDE.md`, `MVP_VERIFICATION_REPORT.md`, `FORM_FIELDS_TO_PASTE.md` | **Live and checked on 7 Nov 2026 from this machine only** (health, doctor/nurse login, OCR upload, benchmark 24/26). Not yet checked from another network or a phone. Free plan sleeps when idle. |
 | B. Final presentation | `JananiSetu_Healthathon_Final_Presentation.pptx` (+ `JananiSetu_Final_Presentation.pdf`) | Built by editing the official template: 12 slides, original order and headings. Every slide rendered and inspected (twice). |
 | C. Two-page brief | `JananiSetu_Two_Page_Solution_Brief.pptx` (+ PDF) | Edited the official template: exactly 2 pages, all 11 sections filled. Removed a stray leftover word ("Armman") from the template's page 1. |
 | D. Demo video | `JananiSetu_Final_Demo.mp4` (6 min 29 s, 1280×720, 10 fps, AAC) | Produced (see 3). Script and shot list: `VIDEO_RECORDING_SCRIPT.md`, `VIDEO_SHOT_LIST.md`. |
@@ -31,11 +31,11 @@
 - Automated scan of both PPTX files: no shapes outside the slide; no leftover template instructions.
 
 ## 5. Unresolved blockers / information needed
-Filled on 5 Nov 2026 from the team: team name **Zulfiqar**; engineer **Abdul Mannaan Sayyad**; doctor partner **Dr. Sarwaat Ayesha** (shown as "Dr." with no qualification or speciality stated, as instructed); contact email; "share publicly" = **No**; no dated milestones; repository not shared publicly.
+Filled from the team (5-7 Nov 2026): team name **Zulfiqar**; engineer **Abdul Mannaan Sayyad**; doctor partner **Dr. Sarwaat Ayesha** (shown as "Dr." with no qualification or speciality stated, as instructed); contact email; "share publicly" = **No**; no dated milestones; repository not shared publicly.
 1. **Team code** (slides 1, 12) – still a placeholder.
 2. Experience details for both members, and the doctor's actual role in reviewing the workflow (slide 2, brief page 1) – placeholders. No clinical validation or endorsement is claimed. Note: the organiser's rules reportedly require each final team to include a *practising* doctor as Clinical Lead; the team should confirm eligibility.
-3. YouTube link for the demo video (slide 12, brief page 2) – to be added after upload.
-4. No public MVP URL exists (stated as "not publicly deployed").
+3. Video link https://youtu.be/5K3hKn5RtTE and MVP link are now on slide 12 and brief page 2. The video lacks the team-introduction and doctor-collaboration segment the form asks for.
+4. Test the MVP and video links in a private window before ticking the form's checkbox.
 5. Portal deadline: the Internshala listing (single secondary source, not cross-checked) gives **8 Nov 2026**; timezone unknown. Confirm on the portal.
 6. No calendar dates are used for sprint milestones (per instruction).
 7. Statistics: re-check NFHS-5 and SRS figures against primary reports; WhatsApp and hosting prices against vendor quotes (COST_MODEL.md).
@@ -44,3 +44,6 @@ Filled on 5 Nov 2026 from the team: team name **Zulfiqar**; engineer **Abdul Man
 
 ## 6. Housekeeping
 The E2E run overwrote `docs/screenshots/*` and changed `data/janani.db`; `git status` shows these as modified and nothing was committed. Build scripts live in `submission/_build/` and can be deleted before sharing.
+
+## 7. Hosting findings (7 Nov 2026)
+On Render the benchmark first scored 42.3% (11/26) because synthetic cards were rendered with a fallback font on Linux; Tesseract itself was fine (the Windows-made PNG uploaded to Render OCR'd perfectly). Fixed by evaluating committed reference PNGs; the live benchmark now returns 24/26. The 15 s OCR timeout also failed on the free CPU and is now configurable. A clean-data-dir run of the full suite after the change gave 57 passed; re-running tests against a reused `data/janani.db` can fail because some tests are not idempotent on a dirty database.
